@@ -1,10 +1,20 @@
 import './Main.css';
-import { Link } from "react-router-dom";
+import { connect } from 'react-redux';
 import React from 'react';
-import addNewsAll from './actions'
+import { getNewsAll } from './actions'
+import PostLeft from "./PostNewsMenu"
+import PostRight from "./PostNewsRightSide"
 
 class Main extends React.Component
 {
+  componentDidMount() {
+    let dispatch = this.props.dispatch;
+
+    fetch('/news').then(res => res.json()).then(data => {
+      dispatch(getNewsAll(data));
+    })
+  }
+
   render()
   {
     console.log(this.props.news);
@@ -12,53 +22,34 @@ class Main extends React.Component
     return (
       <main className="main columns">
         <section className="column main-column">
-              <a className="article first-article" href="{{ url_for('main.page_post',post_id= obj['id']) }}">
-                <figure className="article-image is-4by3">
-                  {/* <img src="{{ url_for('static',filename=obj['image_path']) }}" alt=""> </img> */}
-                </figure>
-                <div className="article-body">
-                  <h2 className="article-title">
-                    This is my Title
-                  </h2>
-                  <p className="article-content">
-                    Hello team!
-                  </p>
-                  <footer className="article-info">
-                    <span>Автор: m1ck3y</span>
-                    <span>Дата публикации: 29.04.2022</span>
-                  </footer>
-                </div>
-              </a>
+              {
+                this.props.news.map(function(post) {
+                  return (
+                    <PostLeft key={post.id} post_object={post}/>
+                  )
+                })
+              }
         </section>
   
         <section className="column">
-              <a className="article" href="{{ url_for('main.page_post',post_id= obj['id']) }}">
-                <figure className="article-image is-3by2">
-                  {/* <img src="{{ url_for('static',filename=obj.image_path) }}" alt=""> */}
-                </figure>
-                <div className="article-body">
-                  <h2 className="article-title">
-                  This is my Title
-                  </h2>
-                  <p className="article-content">
-                  Hello team!
-                  </p>
-                  <footer className="article-info">
-                    <span>Автор: fm1ck3y</span>
-                    <span>Дата публикации: 29.04.2022</span>
-                  </footer>
-                </div>
-              </a>
+              {
+                this.props.news.map(function(post) {
+                  return (
+                    <PostRight key={post.id} post_object={post}/>
+                  )
+                })
+              }
         </section>
       </main>
     );
   }
 }
 
-function mapStateToNews(state) {
+
+function mapStateToProps(state) {
   return {
-    todos: [...state.news]
+    news: [...state.news]
   }
 }
 
-export default Main;
+export default connect(mapStateToProps)(Main);

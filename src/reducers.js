@@ -10,14 +10,14 @@ function news(state = [], action) {
       const news = [
         ...state,
         {
-          _id: action.id,
-          text: action.text,
+          id: action.id,
+          description: action.description,
           title: action.title,
           author: action.author,
-          date: action.date
+          date_create: action.date_create,
+          image: action.image
         }
       ]
-      debugger;
       return news
     case ADD_NEWS_ALL:
       return [...action.news]
