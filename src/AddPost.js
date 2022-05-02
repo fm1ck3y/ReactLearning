@@ -1,21 +1,20 @@
 import './AddPost.css';
 import React from 'react';
 import { addNews } from './actions';
-
+import axios from 'axios';
+import uuid from 'react-uuid'
 
 class AddPost extends React.Component
 {
     constructor(props) {
         super(props);
-        const current = new Date();
         this.state = {
           description: '',
           title: '',
-          // FIXME: CREATE FULL DATE WITH TIME
-          date_create: `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`,
+          date_create: new Date().toLocaleString(),
           author: 'fm1ck3y',
-          image: '',
-          image_filename: ''
+          selectedImage: '',
+          image: ''
         };
     
         this.onFormSubmit = this.onFormSubmit.bind(this);
@@ -31,7 +30,7 @@ class AddPost extends React.Component
     
     onImageChange(e) { 
         this.setState({
-            image: e.target.files[0]
+            selectedImage: e.target.files[0]
         });
     }
 
@@ -43,20 +42,19 @@ class AddPost extends React.Component
     
     onFormSubmit(e) {
         e.preventDefault();
-
         let dispatch = this.props.dispatch;
-        
-        {/* fetch('/image', {
+        const formData = new FormData();
+        formData.append(
+            "my-image-file",
+            this.state.selectedImage,
+            this.state.selectedImage.name
+        );
+
+        fetch('/image', {
             method: 'POST',
-            body:{
-                image: this.state.image
-            }
+            body: formData
         }).then(res => res.json())
-          .then(data => {
-              this.setState({
-                image_filename : data.filename
-              })
-            }) */}
+          .then(data => this.setState({ image : data.filename }));
 
         fetch('/news/add', {
             method: 'POST',
@@ -66,16 +64,15 @@ class AddPost extends React.Component
             body: JSON.stringify({
                 title: this.state.title,
                 description: this.state.description,
-                image: this.state.image_filename,
+                image: this.state.image,
                 date_create: this.state.date_create,
                 author: this.state.author
             })
         })
         .then(res => res.json())
         .then(data => {
-            dispatch(addNews(data.description, data.title, data.author, data.date_create, data.image_filename, data.id));
-        })
-        console.log(this.state.title + ' : ' + this.state.description);
+            dispatch(addNews(data.description, data.title, data.author, data.date_create, data.image, data.id));
+        });
     }
 
   render()
@@ -116,7 +113,6 @@ class AddPost extends React.Component
                     accept="image/*"
                     className="custom-file-input" 
                     name="image" 
-                    value={this.state.filename}
                     onChange={this.onImageChange}/>
             </fieldset>
             <button type="submit">Создать</button>

@@ -1,7 +1,6 @@
 import './Main.css';
-import { Link } from "react-router-dom";
+import { Link, Image } from "react-router-dom";
 import React from 'react';
-import { connect } from 'react-redux';
 
 class Post extends React.Component
 {
@@ -10,7 +9,7 @@ class Post extends React.Component
     return (
       <a className="article" href="">
       <figure className="article-image is-3by2">
-        <img src={this.props.post_object.image} alt=""/>
+        <img src={'image/' + this.props.post_object.image} />
       </figure>
       <div className="article-body">
         <h2 className="article-title">
@@ -21,7 +20,7 @@ class Post extends React.Component
         </p>
         <footer className="article-info">
           <span>Автор: {this.props.post_object.author}</span>
-          <span>Дата публикации: {this.props.post_object.date_create}</span>
+          <span>Дата публикации: {new Date(this.props.post_object.date_create).toLocaleString()}</span>
         </footer>
       </div>
     </a>
