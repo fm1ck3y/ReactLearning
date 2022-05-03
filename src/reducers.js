@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux'
 import {
-  ADD_NEWS,
-  ADD_NEWS_ALL,
+  ADD_POST,
+  ADD_POST_ALL,
 } from './actions'
 
 function news(state = [], action) {
   switch (action.type) {
-    case ADD_NEWS:
+    case ADD_POST:
       const news = [
         ...state,
         {
@@ -19,7 +19,7 @@ function news(state = [], action) {
         }
       ]
       return news
-    case ADD_NEWS_ALL:
+    case ADD_POST_ALL:
       return [...action.news]
     default:
       return state
