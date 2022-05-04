@@ -36,9 +36,14 @@ const port = process.env.PORT || 5000
 app.use(express.json());
 app.use(express.static('build'));
 
-app.get('/news', function(req, res) {
+app.get('/news/:page', function(req, res) {
+    const { page } = req.params
     db.select('*')
         .from('posts')
+        .paginate({
+          perPage: 10,
+          currentPage: page
+        })
         .orderBy('date_create', 'desc')
         .then((data) => {
             console.log(data);
@@ -47,6 +52,19 @@ app.get('/news', function(req, res) {
         .catch((err) => {
             console.log(err);
         });
+})
+
+app.get('/news', function(req, res) {
+  db.select('*')
+      .from('posts')
+      .orderBy('date_create', 'desc')
+      .then((data) => {
+          console.log(data);
+          res.json(data);
+      })
+      .catch((err) => {
+          console.log(err);
+      });
 })
 
 app.post('/news/add', function(req, res) {
@@ -62,7 +80,7 @@ app.post('/news/add', function(req, res) {
   .insert(post)
   .then(() => {
       console.log('Post Added');
-      return res.json({ msg: 'Post Added' });
+      return res.json(post);
   })
   .catch((err) => {
       console.log(err);

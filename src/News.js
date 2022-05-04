@@ -17,8 +17,6 @@ class News extends React.Component
 
   render()
   {
-    console.log(this.props.news);
-
     return (
         <div className= "news">
          <main className="main columns">
@@ -31,7 +29,7 @@ class News extends React.Component
                 })
               }
             </section>
-        </main>
+          </main>
         </div>
     );
   }
@@ -39,7 +37,7 @@ class News extends React.Component
 
 function mapStateToProps(state) {
   return {
-    news: [...state.news]
+    news: [...state.news],
   }
 }
 

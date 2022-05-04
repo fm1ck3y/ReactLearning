@@ -42,7 +42,7 @@ class Header extends React.Component
                                     <Link to='/'>Главная страница</Link>
                                 </li>
                                 <li className="nav__item">
-                                    <Link to='/news'>Новости</Link>
+                                    <Link to='/news/1'>Новости</Link>
                                 </li>
                             </ul>
                       </nav>

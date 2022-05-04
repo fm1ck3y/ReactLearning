@@ -17,26 +17,27 @@ class Main extends React.Component
 
   render()
   {
-    console.log(this.props.news);
-
+    let lengthListNews = this.props.news.length;
     return (
       <main className="main columns">
         <section className="column main-column">
               {
-                this.props.news.map(function(post) {
-                  return (
-                    <PostLeft key={post.id} post_object={post}/>
-                  )
+                this.props.news.map(function(post,index) {
+                  if (index < lengthListNews / 2)
+                    return (
+                      <PostLeft key={post.id} post_object={post}/>
+                    )
                 })
               }
         </section>
   
         <section className="column">
               {
-                this.props.news.map(function(post) {
-                  return (
-                    <PostRight key={post.id} post_object={post}/>
-                  )
+                this.props.news.map(function(post,index) {
+                  if (index >= lengthListNews / 2)
+                    return (
+                      <PostRight key={post.id} post_object={post}/>
+                    )
                 })
               }
         </section>

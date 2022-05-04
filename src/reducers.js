@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 import {
   ADD_POST,
   ADD_POST_ALL,
+  GET_PAGE
 } from './actions'
 
 function news(state = [], action) {
@@ -21,6 +22,8 @@ function news(state = [], action) {
       return news
     case ADD_POST_ALL:
       return [...action.news]
+    case GET_PAGE:
+      return action.page
     default:
       return state
   }

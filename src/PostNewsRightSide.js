@@ -16,7 +16,7 @@ class Post extends React.Component
           {this.props.post_object.title}
         </h2>
         <p className="article-content">
-          {this.props.post_object.description}
+          {/* this.props.post_object.description.slice(0,50) */}
         </p>
         <footer className="article-info">
           <span>Автор: {this.props.post_object.author}</span>
