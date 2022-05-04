@@ -1,5 +1,6 @@
 import './AddPost.css';
 import React from 'react';
+import { connect } from 'react-redux';
 import { addNews } from './actions';
 import axios from 'axios';
 import uuid from 'react-uuid'
@@ -54,25 +55,27 @@ class AddPost extends React.Component
             method: 'POST',
             body: formData
         }).then(res => res.json())
-          .then(data => this.setState({ image : data.filename }));
-
-        fetch('/news/add', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                title: this.state.title,
-                description: this.state.description,
-                image: this.state.image,
-                date_create: this.state.date_create,
-                author: this.state.author
+          //.then(data => this.setState({ image : data.filename }));
+          .then(data => {
+            fetch('/news/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    title: this.state.title,
+                    description: this.state.description,
+                    image: data.filename,
+                    date_create: this.state.date_create,
+                    author: this.state.author
+                })
             })
-        })
-        .then(res => res.json())
-        .then(data => {
-            dispatch(addNews(data.description, data.title, data.author, data.date_create, data.image, data.id));
-        });
+            .then(res => res.json())
+            .then(data => {
+                dispatch(addNews(data.description, data.title, data.author, data.date_create, data.image, data.id));
+            });
+          });
+
     }
 
   render()
@@ -121,4 +124,13 @@ class AddPost extends React.Component
   }
 }
 
-export default AddPost;
+
+function mapStateToProps(state) {
+  return {
+    news: [...state.news]
+  }
+}
+
+export default connect(
+  mapStateToProps
+)(AddPost);
