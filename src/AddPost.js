@@ -2,8 +2,6 @@ import './AddPost.css';
 import React from 'react';
 import { connect } from 'react-redux';
 import { addNews } from './actions';
-import axios from 'axios';
-import uuid from 'react-uuid'
 
 class AddPost extends React.Component
 {
