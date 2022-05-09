@@ -102,7 +102,7 @@ app.get('/image/:filename', (req, res) => {
     if (fs.existsSync(fullfilepath)){
       return res.sendFile(fullfilepath);
     } else {
-      return res.sendFile(path.join(dirname, 'images/default.jpg'));
+      return res.sendFile(path.join(dirname, 'public/default.jpg'));
     }
 });
 app.listen(port, () => {
