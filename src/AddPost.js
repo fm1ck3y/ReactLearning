@@ -2,8 +2,6 @@ import './AddPost.css';
 import React from 'react';
 import { connect } from 'react-redux';
 import { addNews } from './actions';
-import axios from 'axios';
-import uuid from 'react-uuid'
 
 class AddPost extends React.Component
 {
@@ -15,9 +13,11 @@ class AddPost extends React.Component
           date_create: new Date().toLocaleString(),
           author: 'fm1ck3y',
           selectedImage: '',
-          image: ''
+          showResults: false,
+          successfulAddPost: false
         };
     
+        
         this.onFormSubmit = this.onFormSubmit.bind(this);
         this.onImageChange = this.onImageChange.bind(this);
         this.onTitleChange = this.onTitleChange.bind(this);
@@ -49,13 +49,11 @@ class AddPost extends React.Component
             "my-image-file",
             this.state.selectedImage,
             this.state.selectedImage.name
-        );
-
+        );        
         fetch('/image', {
             method: 'POST',
             body: formData
         }).then(res => res.json())
-          //.then(data => this.setState({ image : data.filename }));
           .then(data => {
             fetch('/news/add', {
                 method: 'POST',
@@ -72,27 +70,36 @@ class AddPost extends React.Component
             })
             .then(res => res.json())
             .then(data => {
+                this.setState({ showResults: true });
                 dispatch(addNews(data.description, data.title, data.author, data.date_create, data.image, data.id));
+                if (data.status === 200) {
+                    this.setState({ successfulAddPost: true, title: '', description: '', selectedImage: "" })
+                } else {
+                    this.setState({ successfulAddPost: false })
+                }
             });
           });
-
     }
+    Results = () => (
+        this.state.successfulAddPost ?
+        <div className="w3-panel w3-green">
+            Новый пост успешно добавлен!
+        </div>
+        :
+        <div className="w3-panel w3-red">
+            Ошибка добавления поста, попробуйте еще раз.
+        </div>
+    )
 
   render()
   {
-    console.log(this.props.news);
-
     return (
     
         <form onSubmit={this.onFormSubmit}>
             <h3>Добавление нового поста</h3>
-            <div className="w3-panel w3-red">
-                Failed
-            </div>
-            <div className="w3-panel w3-green">
-                Good
-            </div>
+            { this.state.showResults ? <this.Results /> : null }            
             <fieldset>
+
                 <legend><span className="section">1</span>Основная информация поста</legend>
                 <label htmlFor="name">Заголовок:</label>
                 <input 
@@ -115,7 +122,7 @@ class AddPost extends React.Component
                     multiple
                     accept="image/*"
                     className="custom-file-input" 
-                    name="image" 
+                    name="image"
                     onChange={this.onImageChange}/>
             </fieldset>
             <button type="submit">Создать</button>
@@ -123,6 +130,7 @@ class AddPost extends React.Component
     );
   }
 }
+
 
 
 function mapStateToProps(state) {
