@@ -1,7 +1,5 @@
 import './Main.css';
-import { Link } from "react-router-dom";
 import React from 'react';
-import { connect } from 'react-redux';
 
 class Post extends React.Component
 {

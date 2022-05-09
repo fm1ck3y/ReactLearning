@@ -1,8 +1,8 @@
-
 const express = require('express')
 const knex = require('knex');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs')
 require('dotenv').config();
 
 const imageUploadPath = path.join(path.resolve(), '/images');
@@ -80,10 +80,13 @@ app.post('/news/add', function(req, res) {
   .insert(post)
   .then(() => {
       console.log('Post Added');
+      post.status = 200;
       return res.json(post);
   })
   .catch((err) => {
       console.log(err);
+      post.status = 409;
+      return res.json(post);
   });
 })
 
@@ -95,7 +98,12 @@ app.get('/image/:filename', (req, res) => {
     const { filename } = req.params;
     const dirname = path.resolve();
     const fullfilepath = path.join(dirname, 'images/' + filename);
-    return res.sendFile(fullfilepath);
+
+    if (fs.existsSync(fullfilepath)){
+      return res.sendFile(fullfilepath);
+    } else {
+      return res.sendFile(path.join(dirname, 'public/default.jpg'));
+    }
 });
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

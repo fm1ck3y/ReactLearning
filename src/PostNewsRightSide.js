@@ -1,5 +1,4 @@
 import './Main.css';
-import { Link, Image } from "react-router-dom";
 import React from 'react';
 
 class Post extends React.Component
@@ -15,9 +14,6 @@ class Post extends React.Component
         <h2 className="article-title">
           {this.props.post_object.title}
         </h2>
-        <p className="article-content">
-          {/* this.props.post_object.description.slice(0,50) */}
-        </p>
         <footer className="article-info">
           <span>Автор: {this.props.post_object.author}</span>
           <span>Дата публикации: {new Date(this.props.post_object.date_create).toLocaleString()}</span>
